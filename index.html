@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- displays site properly based on user's device -->
+
+  <link rel="icon" type="image/png" sizes="32x32" href="./assets/images/favicon-32x32.png">
+  
+  <title>Frontend Mentor | Age calculator app</title>
+
+  <!-- Feel free to remove these styles or customise in your own stylesheet 👍 -->
+  <style>
+    .attribution { font-size: 11px; text-align: center; }
+    .attribution a { color: hsl(228, 45%, 44%); }
+    /*My styles:*/
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,400;0,800;1,100&display=swap');
+    body{
+      margin-top:100px;
+      display: grid;
+      place-items: center;
+      background-color:  hsl(0, 0%, 86%);
+      font-size: 400i, 700, 800i;
+      font-family: 'Poppins', sans-serif;
+    }
+    main{
+      background-color: hsl(0, 0%, 100%);
+      width: 800px;
+      height: 500px;
+      border-radius: 15px 15px 120px 15px;
+      display: grid;
+      grid-template-rows: auto auto;    
+    }
+    nav{
+      display: flex;
+      justify-content:start;
+      border-bottom-style: solid;
+      border-bottom-color: hsl(0, 0%, 94%);
+      border-bottom-width: 3px;
+      align-items: center;
+      gap: 30px;
+      margin-left: 2em;
+      height: 10em;
+      width: 80%;
+    }
+    .input-group{
+      background-color: transparent;
+      font-weight: bold;
+    }
+    input{
+      margin-top: 10px;
+      width: 4em;
+      height: 2em;
+      border-radius: 10px;
+      border-width: 1px;
+      border-color:grey;
+      font-size: 32px;
+    }
+    button{
+      border-radius: 100%;
+      background-color: hsl(259, 100%, 65%);
+      border-style: none;
+      width: 70px;
+      height: 70px;
+      display: grid;
+      place-content: center;
+      position: relative;
+      left: 8%;
+      top: 50%;
+    }
+    .result{
+      color: hsl(259, 100%, 65%);
+    }
+    .invalid{
+      display:none;
+      color: hsl(0, 100%, 67%);
+      font-family: 'Poppins', sans-serif;
+      font-size: 16px;
+      font-weight: 100;
+    }
+    #display{
+      font-size: 80px;
+      font-weight: 800;
+      display: grid;
+      grid-template-columns: auto;
+    }
+    .result{
+      margin-left: 60px;
+    }
+    @media screen and (max-width:375px){
+    body{
+        display: grid;
+        place-items: center;
+      }
+     button{
+      left:-65%;
+     }
+     main{
+      width:90%;
+      height: 100%;
+     }
+
+     nav{
+      width: 75%;
+      gap: 20px;
+     }
+     #display{
+      margin-top: 20px;
+     }
+      
+    }
+  </style>
+</head>
+<body onload="on()">
+  <main>
+    <nav>
+      <div class="input-group">
+        <label for="Day" id="day-label">DAY</label><br>
+        <input id="Day" type="number" min="0" max="31" step="1" placeholder="DD">
+        <span class="invalid" id="day-invalid">Must be a valid day</span>
+        <span class="invalid" id="day-required">this field is required</span>
+      </div>
+      <div class="input-group">
+        <label for="Month" id="month-label">MONTH</label><br>
+        <input id="Month" type="number" min="1" max="12" step="1" placeholder="MM">
+        <span class="invalid" id="month-invalid">Must be a valid month</span>
+        <span class="invalid" id="month-required">this field is required</span>
+      </div>
+      <div class="input-group">
+        <label for="Year" id="year-label">YEAR</label><br>
+        <input id="Year" type="number" step="1" placeholder="YYYY">
+        <span class="invalid" id="year-invalid">Must be a valid year</span>
+        <span class="invalid" id="year-required">this field is required</span>
+      </div>
+      <br>
+        <button onclick="verified()"> 
+            <img src="./assets/images/icon-arrow.svg" alt="" srcset="">
+          </button>
+    </nav>
+    <div id="display">
+      <div><span class="result" id="years">--</span> years</div>
+      <div><span class="result" id="months">--</span> months</div>
+      <div><span class="result" id="days">--</span> days</div>
+    </div> 
+  </main>
+  <footer>
+    <div class="attribution">
+      Challenge by <a href="https://www.frontendmentor.io?ref=challenge" target="_blank">Frontend Mentor</a>. 
+      Coded by <a href="#">José Alejandro Herrera Franco</a>.
+    </div>
+  </footer>
+  <script>
+    function on(){
+      const today = new Date()
+      const input_year = document.getElementById('Year')
+      input_year.setAttribute('max',today.getFullYear())
+      input_year.setAttribute('min',(today.getFullYear()-120))
+    }
+    const leap=()=>{
+      return(((document.getElementById('Year').value%4)===0) 
+      && ((document.getElementById('Year').value%100)!==0))
+    }
+    function change_css(input_id,span_id,label_id,display,color,color_label){
+      document.getElementById(span_id).style.display=display
+      document.getElementById(input_id).style.borderColor=color
+      document.getElementById(label_id).style.color=color_label
+    }
+    function verified(){
+      let fail=false
+      const days_months=[31,!leap()?28:29,31,30,31,30,31,31,30,31,30,31]
+      const today = new Date();
+      const day_current = today.getDate();     
+      const month_current =today.getMonth() + 1;
+      const year_current = today.getFullYear();
+      const day_birth = parseInt(document.getElementById('Day').value)
+      const month_birth = parseInt(document.getElementById('Month').value)
+      const year_birth = parseInt(document.getElementById('Year').value)
+      if(Number.isNaN(day_birth) || day_birth==undefined || day_birth==0){
+        change_css('Day','day-required','day-label','block','red','red')
+        fail=true
+      }else{
+        change_css('Day','day-required','day-label','none','gray','black')
+        if(!(Number.isNaN(month_birth) || month_birth==undefined)){
+          if((days_months[month_birth-1]<day_birth || day_birth<0) && !Number.isNaN(day_birth)){
+            change_css('Day','day-invalid','day-label','block','red','red')
+            fail=true
+          }else{
+            change_css('Day','day-invalid','day-label','none','gray','black')
+          }
+        }else{ 
+          if(day_birth<1 || day_birth>31){
+            change_css('Day','day-invalid','day-label','block','red','red')
+            fail=true
+          }else{
+            change_css('Day','day-invalid','day-label','none','gray','black')
+          }
+        }
+      }
+      if(Number.isNaN(month_birth) || month_birth==undefined || month_birth==0){
+        change_css('Month','month-required','month-label','block','red','red')
+        fail=true
+      }else{
+        change_css('Month','month-required','month-label','none','gray','black')
+        if(month_birth<0 || month_birth>12){
+          change_css('Month','month-invalid','month-label','block','red','red')
+          fail=true
+        }else{
+        change_css('Month','month-invalid','month-label','none','gray','black')
+        }
+      }
+      if(Number.isNaN(year_birth) || year_birth==undefined || year_birth==0){
+        change_css('Year','year-required','year-label','block','red','red')
+        fail=true
+      }else{
+        change_css('Year','year-required','year-label','none','gray','black')    
+        if((year_birth<(year_current-120)) || year_birth>year_current){
+          change_css('Year','year-invalid','year-label','block','red','red')
+          fail=true
+        }else{
+          change_css('Year','year-invalid','year-label','none','gray','black')    
+        }
+      }
+      console.log(`Current date:${month_current}/${day_current}/${year_current}`);
+      console.log(`Birthdate:${month_birth}/${day_birth}/${year_birth}`);
+      let years=year_current-year_birth;
+      let months=0;
+      let days=0;
+      if(month_current<month_birth)
+        years-=1
+      else if(month_current>month_birth)
+        months=month_current-month_birth
+      if(month_current==month_birth && day_current<day_birth)
+        years-=1
+      days=day_current-day_birth
+      if(days<0)
+        days=0
+      if(!fail){
+        document.getElementById('years').innerHTML=years
+        document.getElementById('months').innerHTML=months
+        document.getElementById('days').innerHTML=days
+        console.log(`month:${months}/days:${days}/years:${years}`)
+      }else{
+        document.getElementById('years').innerHTML='--'
+        document.getElementById('months').innerHTML='--'
+        document.getElementById('days').innerHTML='--'
+      }
+      
+    }
+  </script>
+</body>
+</html>
